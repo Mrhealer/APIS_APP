@@ -28,15 +28,14 @@ class SplashScreenState extends State<SplashScreen>
     if (_token != null) {
       NavigatorUtils.pushReplacementNamed(context, RouterGenerator.routeHome);
     } else {
-      NavigatorUtils.pushReplacementNamed(
-          context, RouterGenerator.routeLoginScreen);
+    NavigatorUtils.pushReplacementNamed(
+        context, RouterGenerator.routeLoginScreen);
     }
   }
 
   @override
   void initState() {
     super.initState();
-
     animationController = new AnimationController(
         vsync: this, duration: new Duration(seconds: 2));
     animation =

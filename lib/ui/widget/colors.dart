@@ -32,5 +32,7 @@ class Colours {
   static const Color color_sub = Color(0xff007bff);
 
   static const Color color_bg_gray = Color(0xff343A40);
+
+  static const kPrimaryColor = Color(0xFFFF7643);
 }
 

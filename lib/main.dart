@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: "Apis",
       theme: new ThemeData(
-        primarySwatch: Colors.amber,
+        primarySwatch: Colors.lightBlue,
         primaryColor: Colours.color_app,
         backgroundColor: Colours.color_app,
         fontFamily: "OpenSans",

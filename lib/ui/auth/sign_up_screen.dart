@@ -26,9 +26,6 @@ class _SignUpScreenState extends State<SignUpScreen>
   final passwordController = TextEditingController();
   final phoneController = TextEditingController();
   final fullNameController = TextEditingController();
-  final cityController = TextEditingController();
-  final universityController = TextEditingController();
-  final userForController = TextEditingController();
 
   AuthScreenPresenter _presenter;
 
@@ -121,9 +118,6 @@ class _SignUpScreenState extends State<SignUpScreen>
     String phone = phoneController.text.toString().trim();
     String password = passwordController.text.toString().trim();
     String fullName = fullNameController.text.toString().trim();
-    String city = cityController.text.toString().trim();
-    String university = universityController.toString().trim();
-    String userFor = userForController.toString().trim();
     if (email.isEmpty) {
       showDialogError("Email là thông tin bắt buộc !!!");
       return;
@@ -141,8 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     showDialogLoading();
     NetworkUtil().isNetworkConnection().then((internet) {
       if (internet != null && internet) {
-        _presenter.doRegister(email, userName, password, phone, fullName, city,
-            university, userFor);
+        // _presenter.doRegister(email, userName, password, phone, fullName);
       } else {
         hideDialog();
         showToast("Network Not Connection!", Toast.LENGTH_SHORT,
@@ -217,9 +210,6 @@ class _SignUpScreenState extends State<SignUpScreen>
             isPassword: true),
         _entryField("Phone", phoneController, "Phone"),
         _entryField("FullName", fullNameController, "FullName"),
-        _entryField("City", cityController, "City"),
-        _entryField("University", universityController, "University"),
-        _entryField("Userfor", userForController, "Userfor"),
       ],
     );
   }

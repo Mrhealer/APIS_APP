@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:apis_app/utils/auth_atils.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart';
-import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 import 'config_service.dart';
@@ -17,11 +16,11 @@ class BaseServices {
   Map<String, String> _requestHeader;
 
   Future _getToken() async {
-    var _token = await AuthUtils.instance.getToken();
-    var _userId = await AuthUtils.instance.getUserId();
+    var _token = "Bearer " + await AuthUtils.instance.getToken();
 
-    _headerOption =
-        ConfigServices.getHeaders(token: _token, userId: _userId.toString());
+    _headerOption = ConfigServices.getHeaders(token: _token);
+
+    _requestHeader = ConfigServices.requestHeader(token: _token);
   }
 
   Future<dynamic> request(String url, RequestType type,
@@ -59,16 +58,13 @@ class BaseServices {
     }
     Logger().d(response.toString());
 
-    //* handling error and status code
     try {
       response = json.decode(response.toString());
     } catch (e) {
       Logger().e("json.decode error");
     }
 
-    return isParameterData
-        ? json.decode("{ \"Data\" " + ":" + response.body + "}")
-        : response;
+    return response;
   }
 
   Future<dynamic> apiGet(String path,
@@ -76,163 +72,25 @@ class BaseServices {
       queryParameters,
       bool isUtf8Decode = false}) async {
     var response;
-    if (isHeaders) {
-      await _getToken();
-      if (AuthUtils.instance.getTokenLocal() != "null" &&
-          AuthUtils.instance.getTokenLocal().isNotEmpty) {
-        response = (path.length > 40)
-            ? await _client.get("$path", headers: _requestHeader)
-            : await _client.get(Uri.http(path, queryParameters),
-                headers: _requestHeader);
-      } else {
-        response = (path.length > 40)
-            ? await _client.get("$path")
-            : await _client.get(Uri.http(path, queryParameters));
-      }
-    } else {
-      response = (path.length > 40)
-          ? await _client.get("$path")
-          : await _client.get(Uri.http(path, queryParameters));
-    }
-    Logger().d(path);
-
-    var statusCode = response.statusCode;
-
-    if (statusCode < 200 || statusCode > 400 || json == null) {
-      throw new Exception("Error while fetching data");
-    }
-
-    return isUtf8Decode
-        ? json.decode(utf8.decode(response.bodyBytes))
-        : json.decode("{ \"Data\" " + ":" + response.body + "}");
-  }
-
-  Future<dynamic> apiGetForWriteForm(String path,
-      {bool isHeaders = false,
-      queryParameters,
-      bool isUtf8Decode = false}) async {
-    var response;
-    if (isHeaders) {
-      _getToken();
-      if (AuthUtils.instance.getTokenLocal() != "null" &&
-          AuthUtils.instance.getTokenLocal().isNotEmpty) {
-        response = (path.length > 40)
-            ? await _client.get("$path", headers: _requestHeader)
-            : await _client.get(Uri.http(path, queryParameters),
-                headers: _requestHeader);
-      } else {
-        Logger().d("1111");
-
-        response = (path.length > 40)
-            ? await _client.get("$path")
-            : await _client.get(Uri.http(path, queryParameters));
-      }
-    } else {
-      response = (path.length > 40)
-          ? await _client.get("$path")
-          : await _client.get(Uri.http(path, queryParameters));
-    }
-
-    var statusCode = response.statusCode;
-    if (statusCode < 200 || statusCode > 400 || json == null) {
-      return null;
-      throw new Exception("Error while fetching data");
-    }
-
-    return isUtf8Decode
-        ? json.decode(utf8.decode(response.bodyBytes))
-        : json.decode(response.body);
-  }
-
-  Future<dynamic> apiGetNotConvert(String path,
-      {bool isHeaders = false,
-      queryParameters,
-      bool isUtf8Decode = false}) async {
-    var response;
-    if (isHeaders) {
-      await _getToken();
-      if (AuthUtils.instance.getTokenLocal() != "null" &&
-          AuthUtils.instance.getTokenLocal().isNotEmpty) {
-        response = (path.length > 40)
-            ? await _client.get("$path", headers: _requestHeader)
-            : await _client.get(Uri.http(path, queryParameters),
-                headers: _requestHeader);
-      } else {
-        response = (path.length > 40)
-            ? await _client.get("$path")
-            : await _client.get(Uri.http(path, queryParameters));
-      }
-    } else {
-      response = (path.length > 40)
-          ? await _client.get("$path")
-          : await _client.get(Uri.http(path, queryParameters));
-    }
-
-    var statusCode = response.statusCode;
-
-    if (statusCode < 200 || statusCode > 400 || json == null) {
-      throw new Exception("Error while fetching data");
-    }
-
-    return isUtf8Decode
-        ? json.decode(utf8.decode(response.bodyBytes))
-        : json.decode(response.body);
-  }
-
-  Future<dynamic> apiPost(String path,
-      {bool isHeaders = false,
-      body,
-      encoding,
-      bool isUtf8Decode = false}) async {
-    if (isHeaders) {
-      await _getToken();
-    }
-    Logger().d(body);
-
-    var _body = json.encode(body);
-    var response;
+    await _getToken();
     if (AuthUtils.instance.getTokenLocal() != "null" &&
         AuthUtils.instance.getTokenLocal().isNotEmpty) {
-      response = await _client.post(path,
-          headers: _requestHeader, body: _body, encoding: encoding);
+      response = (path.length > 40)
+          ? await _client.get("$path", headers: _requestHeader)
+          : await _client.get(Uri.http(path, queryParameters),
+              headers: _requestHeader);
     } else {
-      response = await _client.post(path, body: _body, encoding: encoding);
+      response = (path.length > 40)
+          ? await _client.get("$path")
+          : await _client.get(Uri.http(path, queryParameters));
     }
-    final int statusCode = response.statusCode;
-
+    Logger().d("longakak" + path);
+    var statusCode = response.statusCode;
+    Logger().d("longakak" + statusCode.toString());
     if (statusCode < 200 || statusCode > 400 || json == null) {
       throw new Exception("Error while fetching data");
     }
 
-    return isUtf8Decode
-        ? json.decode(utf8.decode(response.bodyBytes))
-        : json.decode("{ \"Data\" " + ":" + response.body + "}");
-  }
-
-  Future<dynamic> apiPostCheckData(String path,
-      {bool isHeaders = false,
-      body,
-      encoding,
-      bool isUtf8Decode = false}) async {
-    if (isHeaders) {
-      await _getToken();
-    }
-
-    Logger().d(path);
-
-    var request = http.Request('POST', Uri.parse(path));
-    request.body = '''"$body"''';
-    request.headers.addAll(_requestHeader);
-
-    http.StreamedResponse response = await request.send();
-    Logger().d("Lomgkaka " + response.statusCode.toString());
-    var responseData;
-    if (response.statusCode == 200) {
-      responseData = await response.stream.bytesToString();
-    } else {
-      responseData = response.reasonPhrase;
-    }
-    Logger().d(responseData.toString());
-    return json.decode("{ \"Data\" " + ":" + responseData + "}");
+    return json.decode(utf8.decode(response.bodyBytes));
   }
 }

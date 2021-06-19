@@ -4,18 +4,8 @@ import 'package:apis_app/models/auth/login_model.dart';
 import 'package:logger/logger.dart';
 
 class AuthService extends BaseServices {
-  final String loginNameParamKey = "LoginName";
-  final String passwordParamKey = "Password";
-  final String tokenDeviceParamKey = "TokenDevice";
-  final String emailParamKey = "Email";
-  final String userNameParamKey = "Username";
-  final String phoneParamKey = "Phone";
-  final String fullNameParamKey = "Fullname";
-  final String cityParamKey = "City";
-  final String universityParamKey = "University";
-  final String userForParamKey = "Userfor";
-  final String monthParamKey = "Month";
-  final String yearParamKey = "Year";
+  final String loginNameParamKey = "TenDangNhap";
+  final String passwordParamKey = "MatKhau";
 
   static AuthService _instance = new AuthService.internal();
 
@@ -28,9 +18,7 @@ class AuthService extends BaseServices {
     var resp = await request(Api.instance.login, RequestType.POST,
         data: {
           loginNameParamKey: email,
-          passwordParamKey: password,
-          tokenDeviceParamKey: token
-        },
+          passwordParamKey: password},
         useToken: false);
     LoginApi loginApi = LoginApi.fromJson(resp);
 
