@@ -1,14 +1,17 @@
-import 'package:apis_app/ui/routers/fluro_navigator.dart';
+import 'package:apis_app/models/bundle.dart';
 import 'package:apis_app/ui/routers/router_generator.dart';
 import 'package:flutter/material.dart';
 
-class CustomerCard extends StatelessWidget {
+import 'date_callback.dart';
+
+class CustomerCard extends StatelessWidget implements ADateSelected {
   final String ngayChay,
       idTuyenDuong,
       tenTuyenDuong,
       idKhungGio,
       thoiGianDi,
-      thoiGianDen;
+      thoiGianDen,
+      strDate;
   int loaiKhach, soKhach;
 
   CustomerCard(
@@ -20,7 +23,8 @@ class CustomerCard extends StatelessWidget {
       this.thoiGianDi,
       this.thoiGianDen,
       this.loaiKhach,
-      this.soKhach})
+      this.soKhach,
+      this.strDate})
       : super(key: key);
 
   @override
@@ -64,25 +68,47 @@ class CustomerCard extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                  child: Text("Add to cart".toUpperCase(),
+                  child: Text(statusType(loaiKhach).toUpperCase(),
                       style: TextStyle(fontSize: 14)),
                   style: ButtonStyle(
                       padding: MaterialStateProperty.all<EdgeInsets>(
                           EdgeInsets.all(15)),
-                      foregroundColor: colorType(loaiKhach),
+                      foregroundColor: colorStateType(loaiKhach),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                               side: BorderSide(color: Colors.red)))),
-                  onPressed: () => {
-                        NavigatorUtils.push(
-                            context, RouterGenerator.routeDetail)
-                      }),
+                  onPressed: () {
+                    DataBundle dataBundle = new DataBundle(
+                        strDate: strDate,
+                        strTuyenDuong: idTuyenDuong,
+                        strType: loaiKhach);
+                    Navigator.pushNamed(context, RouterGenerator.routeDetail,
+                        arguments: dataBundle);
+                  }),
             ),
           ],
         ),
       ),
     );
+  }
+
+  colorStateType(int status) {
+    switch (status) {
+      case 2:
+        return MaterialStateProperty.all<Color>(Colors.grey);
+        break;
+      case 3:
+        return MaterialStateProperty.all<Color>(Colors.yellowAccent);
+        break;
+      case 4:
+        return MaterialStateProperty.all<Color>(Colors.blueAccent);
+        break;
+      case 9:
+        return MaterialStateProperty.all<Color>(Colors.red);
+        break;
+    }
+    return MaterialStateProperty.all<Color>(Colors.blueGrey);
   }
 
   colorType(int status) {
@@ -113,9 +139,29 @@ class CustomerCard extends StatelessWidget {
       case 4:
         return "Đã đón";
         break;
+      case 10:
+        return "Đã nhận khách";
+        break;
+      case 5:
+        return "Trả khách";
+        break;
+      case 6:
+        return "Đã trả";
+        break;
+      case 7:
+        return "Đang trả khách";
+        break;
       case 9:
         return "Đã huỷ";
         break;
+      default:
+        return "unknow";
+        break;
     }
+  }
+
+  @override
+  void onDateSelected(String str) {
+    // TODO: implement onDateSelected
   }
 }

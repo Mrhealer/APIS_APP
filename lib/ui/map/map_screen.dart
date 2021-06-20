@@ -6,9 +6,11 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logger/logger.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key key}) : super(key: key);
+  const MapScreen({Key key, this.strAddress}) : super(key: key);
+  final String strAddress;
 
   @override
   _MapViewState createState() => _MapViewState();
@@ -95,14 +97,16 @@ class _MapViewState extends State<MapScreen> {
       setState(() {
         _currentPosition = position;
         print('CURRENT POS: $_currentPosition');
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 18.0,
+        if (mapController != null) {
+          mapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                target: LatLng(position.latitude, position.longitude),
+                zoom: 18.0,
+              ),
             ),
-          ),
-        );
+          );
+        }
       });
       await _getAddress();
     }).catchError((e) {
@@ -287,6 +291,7 @@ class _MapViewState extends State<MapScreen> {
 
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
+        Logger().d("longakaka" + point.latitude.toString());
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
     }
@@ -305,6 +310,10 @@ class _MapViewState extends State<MapScreen> {
   void initState() {
     super.initState();
     _getCurrentLocation();
+    if (widget.strAddress != null && widget.strAddress.isNotEmpty) {
+      destinationAddressController.text = widget.strAddress;
+      desrinationAddressFocusNode.nextFocus();
+    }
   }
 
   @override

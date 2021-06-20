@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'components/body.dart';
+import 'components/date_callback.dart';
 
 class WaitingListScreen extends StatefulWidget {
   const WaitingListScreen({Key key}) : super(key: key);
@@ -12,8 +13,10 @@ class WaitingListScreen extends StatefulWidget {
   _WaitingListScreenState createState() => _WaitingListScreenState();
 }
 
-class _WaitingListScreenState extends State<WaitingListScreen> {
+class _WaitingListScreenState extends State<WaitingListScreen>
+    implements ADateSelected {
   WaitingListBloc _waitingListBloc;
+  String strDate = "";
 
   @override
   void initState() {
@@ -21,7 +24,8 @@ class _WaitingListScreenState extends State<WaitingListScreen> {
     var formatter = new DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
     _waitingListBloc = WaitingListBloc();
-    _waitingListBloc.fetchWaitingList("2021-06-07");
+    _waitingListBloc.fetchWaitingList(formattedDate);
+    strDate = formattedDate;
     super.initState();
   }
 
@@ -29,13 +33,17 @@ class _WaitingListScreenState extends State<WaitingListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Danh Sach"), backgroundColor: Colors.lightBlue[900]),
+          title: Text("Danh sách chuyến"),
+          backgroundColor: Colors.lightBlue[900]),
       body: Container(
         child: StreamBuilder(
           stream: _waitingListBloc.waitingList,
           builder: (context, AsyncSnapshot<WaitingListModel> snapshot) {
             if (snapshot.hasData) {
-              return Body(listWaitingList: snapshot.data.data);
+              return Body(
+                listWaitingList: snapshot.data.data,
+                strDate: strDate,
+              );
             } else if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             }
@@ -46,5 +54,12 @@ class _WaitingListScreenState extends State<WaitingListScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void onDateSelected(String str) {
+    setState(() {
+      strDate = str;
+    });
   }
 }

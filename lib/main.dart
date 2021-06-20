@@ -1,6 +1,7 @@
 import 'package:apis_app/ui/routers/router_generator.dart';
 import 'package:apis_app/ui/splash/splash_screen.dart';
 import 'package:apis_app/ui/widget/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

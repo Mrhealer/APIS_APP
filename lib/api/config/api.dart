@@ -9,7 +9,7 @@ class Api {
   String login = "$baseURL/taikhoan/dangnhap";
 
   /// register
-  String register = "$baseURL/User/RegisUser";
+  String register = "$baseURL/taikhoan/dangky";
 
   // waitingList
   String getWaitingList = "$baseURL/trungchuyen/";

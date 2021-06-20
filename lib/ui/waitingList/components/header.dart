@@ -30,7 +30,7 @@ class WaitingListHeader extends StatelessWidget {
         GestureDetector(
           onTap: press,
           child: Text(
-            "$count Chuyen",
+            "Total : $count",
             style: TextStyle(
               fontSize: 18,
               color: Colors.blueAccent,

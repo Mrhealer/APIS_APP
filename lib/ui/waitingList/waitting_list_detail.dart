@@ -1,18 +1,16 @@
 import 'package:apis_app/blocs/waitingListBloc.dart';
 import 'package:apis_app/models/waitingList/waiting_list_detail_model.dart';
-import 'package:apis_app/models/waitingList/waiting_list_model.dart';
 import 'package:apis_app/ui/waitingList/components/detail_body.dart';
 import 'package:flutter/material.dart';
 
-import 'components/body.dart';
-
 class WaitingListDetailScreen extends StatefulWidget {
-  final String strDate = "2021-06-07";
-  final String strTuyenDuong = "33";
-  final String strType = "19";
+  final String strDate;
+
+  final String strTuyenDuong;
+  final String strType;
 
   const WaitingListDetailScreen(
-      {Key key})
+      {Key key, this.strDate, this.strTuyenDuong, this.strType})
       : super(key: key);
 
   @override
@@ -34,7 +32,7 @@ class _WaitingListDetailState extends State<WaitingListDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Danh Sach"), backgroundColor: Colors.lightBlue[900]),
+          title: Text("Chi tiết"), backgroundColor: Colors.lightBlue[900]),
       body: Container(
         child: StreamBuilder(
           stream: _waitingListBloc.waitingDetailList,

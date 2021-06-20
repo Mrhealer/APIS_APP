@@ -1,5 +1,5 @@
+import 'package:apis_app/models/bundle.dart';
 import 'package:apis_app/models/waitingList/waiting_list_detail_model.dart';
-import 'package:apis_app/ui/routers/fluro_navigator.dart';
 import 'package:apis_app/ui/routers/router_generator.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
@@ -220,8 +220,10 @@ class BodyDetail extends StatelessWidget {
                       ),
                       TextButton(
                         onPressed: () {
-                          NavigatorUtils.push(
-                              context, RouterGenerator.routeMap);
+                          DataBundle dataBundle = new DataBundle(
+                              strAddress: listWaitingList[index].diaChiKhachDi);
+                          Navigator.pushNamed(context, RouterGenerator.routeMap,
+                              arguments: dataBundle);
                         },
                         child: Column(
                           children: <Widget>[

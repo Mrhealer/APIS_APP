@@ -7,8 +7,9 @@ import 'customer_card.dart';
 
 class Body extends StatelessWidget {
   final List<WaitingListData> listWaitingList;
+  final String strDate;
 
-  Body({this.listWaitingList});
+  Body({this.listWaitingList, this.strDate});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,7 @@ class Body extends StatelessWidget {
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return CustomerCard(
+              strDate: strDate,
               tenTuyenDuong: listWaitingList[index].tenTuyenDuong,
               thoiGianDi: listWaitingList[index].thoiGianDi,
               thoiGianDen: listWaitingList[index].thoiGianDen,

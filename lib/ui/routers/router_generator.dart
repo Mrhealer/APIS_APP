@@ -1,3 +1,4 @@
+import 'package:apis_app/models/bundle.dart';
 import 'package:apis_app/ui/auth/login_screen.dart';
 import 'package:apis_app/ui/auth/sign_up_screen.dart';
 import 'package:apis_app/ui/home/home_screen.dart';
@@ -33,10 +34,22 @@ class RouterGenerator {
         return MaterialPageRoute(builder: (_) => SignUpScreen());
         break;
       case routeDetail:
-        return MaterialPageRoute(builder: (_) => WaitingListDetailScreen());
+        if (args is DataBundle) {
+          return MaterialPageRoute(
+              builder: (_) => WaitingListDetailScreen(
+                    strDate: args.strDate,
+                    strTuyenDuong: args.strTuyenDuong,
+                    strType: args.strType.toString(),
+                  ));
+        }
         break;
       case routeMap:
-        return MaterialPageRoute(builder: (_) => MapScreen());
+        if (args is DataBundle) {
+          return MaterialPageRoute(
+              builder: (_) => MapScreen(
+                    strAddress: args.strAddress,
+                  ));
+        }
         break;
       default:
         {

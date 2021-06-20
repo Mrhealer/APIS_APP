@@ -21,11 +21,11 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen>
     with SingleTickerProviderStateMixin, DialogCommon
     implements AuthScreenContract {
-  final emailController = TextEditingController();
   final userNameController = TextEditingController();
   final passwordController = TextEditingController();
   final phoneController = TextEditingController();
-  final fullNameController = TextEditingController();
+  final idController = TextEditingController();
+  final levelController = TextEditingController();
 
   AuthScreenPresenter _presenter;
 
@@ -113,35 +113,56 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   _register() {
-    String email = emailController.text.toString().trim();
     String userName = userNameController.text.toString().trim();
     String phone = phoneController.text.toString().trim();
     String password = passwordController.text.toString().trim();
-    String fullName = fullNameController.text.toString().trim();
-    if (email.isEmpty) {
-      showDialogError("Email là thông tin bắt buộc !!!");
-      return;
-    }
+    String id = idController.text.toString().trim();
+    String level = levelController.text.toString().trim();
 
     if (userName.isEmpty) {
-      showDialogError("User Name là thông tin bắt buộc !!!");
+      showDialogError("tên đăng nhập là thông tin bắt buộc !!!");
       return;
     }
 
     if (password.isEmpty) {
-      showDialogError("Password là thông tin bắt buộc !!!");
+      showDialogError("mật khẩu là thông tin bắt buộc !!!");
       return;
+    }
+    if (id.isNotEmpty) {
+      if (!isNumeric(id)) {
+        showDialogError("id không đúng");
+        return;
+      }
+    } else {
+      id = "4";
+    }
+
+    if (level.isNotEmpty) {
+      if (!isNumeric(level)) {
+        showDialogError("Chức vụ không đúng");
+        return;
+      }
+    } else {
+      level = "2";
     }
     showDialogLoading();
     NetworkUtil().isNetworkConnection().then((internet) {
       if (internet != null && internet) {
-        // _presenter.doRegister(email, userName, password, phone, fullName);
+        _presenter.doRegister(userName, password, phone,
+            id: int.parse(id), level: int.parse(level));
       } else {
         hideDialog();
         showToast("Network Not Connection!", Toast.LENGTH_SHORT,
             ToastGravity.BOTTOM, Colors.grey);
       }
     });
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return double.parse(s, (e) => null) != null;
   }
 
   Widget _loginAccountLabel() {
@@ -204,12 +225,12 @@ class _SignUpScreenState extends State<SignUpScreen>
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email*", emailController, "Email"),
-        _entryField("UserName*", userNameController, "UserName"),
-        _entryField("Password*", passwordController, "Password",
+        _entryField("Tên đăng nhập", userNameController, "tên đăng nhập"),
+        _entryField("Mật khẩu", passwordController, "mật khẩu",
             isPassword: true),
-        _entryField("Phone", phoneController, "Phone"),
-        _entryField("FullName", fullNameController, "FullName"),
+        _entryField("điện thoại", phoneController, "điện thoại"),
+        _entryField("id nhà xe", idController, "id nhà xe"),
+        _entryField("chức vụ", levelController, "Chức vụ"),
       ],
     );
   }

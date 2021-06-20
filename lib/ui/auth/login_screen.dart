@@ -52,28 +52,6 @@ class _LoginScreenState extends State<LoginScreen>
     });
   }
 
-  Widget _backButton() {
-    return InkWell(
-      onTap: () => {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            RouterGenerator.routeHome, (Route<dynamic> route) => false)
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _entryField(String title, TextEditingController textEditingController,
       {bool isPassword = false}) {
     return Container(
@@ -123,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen>
                 end: Alignment.centerRight,
                 colors: [Color(0xfffbb448), Color(0xfff7892b)])),
         child: Text(
-          'Login',
+          'Đăng nhập',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
       ),
@@ -157,54 +135,6 @@ class _LoginScreenState extends State<LoginScreen>
           ),
           SizedBox(
             width: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _facebookButton() {
-    return Container(
-      height: 50,
-      margin: EdgeInsets.symmetric(vertical: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff1959a9),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(5),
-                    topLeft: Radius.circular(5)),
-              ),
-              alignment: Alignment.center,
-              child: Text('f',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w400)),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff2872ba),
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(5),
-                    topRight: Radius.circular(5)),
-              ),
-              alignment: Alignment.center,
-              child: Text('Log in with Facebook',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400)),
-            ),
           ),
         ],
       ),
@@ -270,26 +200,20 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Email", emailController),
-        _entryField("Password", passwordController, isPassword: true),
+        _entryField("Tên đăng nhập", emailController),
+        _entryField("Mật khẩu", passwordController, isPassword: true),
       ],
     );
   }
 
   _login() {
-    Logger().d("Show 111");
-
     String email = emailController.text.toString();
     String password = passwordController.text.toString();
     if (email.isEmpty || password.isEmpty) {
-      showDialogError("Nhập email và password !!!");
+      showDialogError("Nhập user và mật khẩu !!!");
       return;
     }
     showDialogLogin(context);
-    Logger().d("Show Dialog");
-
-    // LogUtils().printLogcat(email);
-    // authBloc.fetchDataAccountApi(email, password);
     NetworkUtil().isNetworkConnection().then((internet) {
       if (internet != null && internet) {
         _presenter.doLogin(email, password, _token);
@@ -348,7 +272,6 @@ class _LoginScreenState extends State<LoginScreen>
               ),
             ),
           ),
-          Positioned(top: 40, left: 0, child: _backButton()),
           TipDialogContainer(duration: const Duration(seconds: 2))
         ],
       ),
